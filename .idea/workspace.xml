@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ccc3cdfd-7a93-42c1-8621-d3de114da5c2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delete_thorium_new.py" beforeDir="false" afterPath="$PROJECT_DIR$/delete_thorium_new.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delete_thorium_profiles_gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/delete_thorium_profiles_gui.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,9 +24,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="365Pv9as5rgn3DVkXZUHQbhMK8g" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -39,6 +41,7 @@
     "Python.add_thorium_profiles_gui.executor": "Run",
     "Python.delete_thorium_new.executor": "Run",
     "Python.delete_thorium_profiles.executor": "Run",
+    "Python.delete_thorium_profiles_gui.executor": "Run",
     "Python.delete_throrium_profiles_gui.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
@@ -53,6 +56,9 @@
       <recent name="D:\ADR\Programming\Program\MyProgram\Python\BOT_AUTOMATION\thorium_managemenet\entity" />
       <recent name="D:\ADR\Programming\Program\MyProgram\Python\BOT_AUTOMATION\thorium_managemenet\method" />
       <recent name="D:\ADR\Programming\Program\MyProgram\Python\BOT_AUTOMATION\thorium_managemenet" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\ADR\Programming\Program\MyProgram\Python\BOT_AUTOMATION\thorium_managemenet\resources\icon_program" />
     </key>
   </component>
   <component name="RunManager" selected="Python.delete_thorium_profiles_gui">

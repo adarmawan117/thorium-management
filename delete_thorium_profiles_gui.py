@@ -4,6 +4,8 @@ import os
 import json
 import traceback
 
+from PyQt5.QtWidgets import QTextEdit, QLineEdit
+
 import method.directory as mydir
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -65,11 +67,41 @@ class Ui_Frame(QtCore.QObject):  # Menjadikan Ui_Frame sebagai QObject
 
         # region Input File
         y = 30
-        self.label_table = QtWidgets.QLabel(Frame)
-        self.label_table.setText("Choose Thorium Profiles")
-        self.label_table.setGeometry(QtCore.QRect(20, y, 215, 16))
+        self.txt_path = QLineEdit(Frame)
+        self.txt_path.setGeometry(QtCore.QRect(20, y, 383, 25))
+        self.txt_path.setPlaceholderText("Masukkan nama profile yang akan dicari, kemudian tekan enter...")
+        self.txt_path.setStyleSheet("""
+                    QTextEdit {
+                        background-color: #f5f5f5;
+                        border: 1px solid #b0bec5;
+                        border-radius: 2px;
+                    }
+                    QTextEdit:focus {
+                        border: 1px solid #1e88e5;
+                    }
+                """)
+        self.txt_path.returnPressed.connect(self.search_profile)
 
-        y += 20
+        self.btn_load_profile_file = QtWidgets.QPushButton(Frame)
+        self.btn_load_profile_file.setGeometry(QtCore.QRect(408, y, 55, 25))
+        icon = QtGui.QIcon('resources/icon_program/Search.png')
+        self.btn_load_profile_file.setIcon(icon)
+        self.btn_load_profile_file.setStyleSheet("""
+                                    QPushButton {
+                                        background-color: #388E3C;  /* Background normal */
+                                        color: white;  /* Foreground normal */
+                                        border: none;
+                                        padding: 2px;
+                                        border-radius: 2px;
+                                    }
+                                    QPushButton:hover {
+                                        background-color: #66BB6A;  /* Background ketika hover */
+                                        color: white;  /* Foreground saat hover */
+                                    }
+                                """)
+        self.btn_load_profile_file.clicked.connect(self.search_profile)
+
+        y += 30
         self.tableProfiles = QtWidgets.QTableWidget(Frame)
         self.tableProfiles.setGeometry(QtCore.QRect(20, y, 551, 250))
         self.tableProfiles.setColumnCount(4)
@@ -124,16 +156,13 @@ class Ui_Frame(QtCore.QObject):  # Menjadikan Ui_Frame sebagai QObject
 
         self.resetTable()
 
-    def resetTable(self):
+    def resetTable(self, name: str = None):
         try:
-            complete_profiles = get_complete_profiles()
+            complete_profiles = get_complete_profiles(name)
             self.tableProfiles.setRowCount(len(complete_profiles))
-            # self.tableProfiles.setRowCount(1)
 
             no = 0
             for profile in complete_profiles:
-                print(profile)
-                # if profile['kode_profile'] == 9999:
                 self.tableProfiles.setItem(no, 0, QtWidgets.QTableWidgetItem(str(no+1)))
                 self.tableProfiles.setItem(no, 1, QtWidgets.QTableWidgetItem(profile['name']))
                 self.tableProfiles.setItem(no, 2, QtWidgets.QTableWidgetItem(str(profile['kode_profile'])))
@@ -143,6 +172,10 @@ class Ui_Frame(QtCore.QObject):  # Menjadikan Ui_Frame sebagai QObject
         except:
             traceback.print_exc()
             sys.exit(-1)
+
+    def search_profile(self):
+        name = self.txt_path.text()
+        self.resetTable(name)
 
     def eventFilter(self, obj, event):
         if obj == self.tableProfiles and event.type() == QtCore.QEvent.KeyPress:

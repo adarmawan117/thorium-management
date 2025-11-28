@@ -5,7 +5,7 @@ import os
 import sys
 import method.directory as mydir
 
-from method.get_account import get_facebook_accounts
+from method.get_account import get_facebook_accounts, get_account_facebook
 
 
 def log(message):
@@ -36,22 +36,42 @@ def extract_sub_folders(thorium_base_path) -> list[str]:
 
     return sub_folder_results
 
-def get_complete_profiles() -> list[dict]:
+def get_fb_accounts(name: str) -> (list[str], list[int]):
+    """
+    Mengambil akun facebook<br>
+    Jika name = None artinya ambil semua<br>
+    Jika name tidak None, maka cari berdasarkan nama tersebut
+    :param name: Boleh None atau str
+    :return:
+    """
+
+    if name is None or name == "":
+        names, codes = get_facebook_accounts()
+    else:
+        akun = get_account_facebook(name)
+        names = [akun.nama]
+        codes = [akun.kode_profile]
+
+    return names, codes
+
+def get_complete_profiles(name: str) -> list[dict]:
     thorium_base_path = os.getenv("THORIUM_PATH", mydir.thorium_dir)
     sub_folder_results = extract_sub_folders(thorium_base_path)
 
     # DATA AKUN FACEBOOK (nama -> kode_profile)
-    names, codes = get_facebook_accounts()
+    names, codes = get_fb_accounts(name)
     complete_profiles = []
 
     # Ambil name dan kode_profile berdasarkan folder yang ditemukan
     for sub_folder in sub_folder_results:
-        code_from_folder = int(sub_folder.replace(f"{thorium_base_path}\\USER_DATA_", ""))
+        try:
+            code_from_folder = int(sub_folder.replace(f"{thorium_base_path}\\USER_DATA_", ""))
+        except ValueError as e:
+            continue
 
         # cek apakah kodenya ditemukan didalam database
         if code_from_folder in codes:
             index = codes.index(code_from_folder)
-            # print(f"Name: {names[index]} -> Kode: {codes[index]} -> Index: {index}")
 
             complete_profiles.append({
                 "name": names[index],
