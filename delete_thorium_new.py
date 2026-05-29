@@ -5,7 +5,7 @@ import os
 import sys
 import method.directory as mydir
 
-from method.get_account import get_facebook_accounts, get_account_facebook
+from method.get_account import get_facebook_accounts, get_account_facebook, get_accounts_facebook
 
 
 def log(message):
@@ -36,30 +36,35 @@ def extract_sub_folders(thorium_base_path) -> list[str]:
 
     return sub_folder_results
 
-def get_fb_accounts(name: str) -> (list[str], list[int]):
+def get_fb_accounts(names: list[str]) -> (list[str], list[int]):
     """
     Mengambil akun facebook<br>
     Jika name = None artinya ambil semua<br>
     Jika name tidak None, maka cari berdasarkan nama tersebut
-    :param name: Boleh None atau str
+    :param names: Boleh None atau str
     :return:
     """
 
-    if name is None or name == "":
+    if names is None or len(names) == 0:
         names, codes = get_facebook_accounts()
     else:
-        akun = get_account_facebook(name)
-        names = [akun.nama]
-        codes = [akun.kode_profile]
+        accounts = get_accounts_facebook(names)
+        names = []
+        codes = []
+
+        for akun in accounts:
+            names.append(akun.nama)
+            codes.append(akun.kode_profile)
+
 
     return names, codes
 
-def get_complete_profiles(name: str) -> list[dict]:
+def get_complete_profiles(names: list[str]) -> list[dict]:
     thorium_base_path = os.getenv("THORIUM_PATH", mydir.thorium_dir)
     sub_folder_results = extract_sub_folders(thorium_base_path)
 
     # DATA AKUN FACEBOOK (nama -> kode_profile)
-    names, codes = get_fb_accounts(name)
+    names, codes = get_fb_accounts(names)
     complete_profiles = []
 
     # Ambil name dan kode_profile berdasarkan folder yang ditemukan
@@ -81,21 +86,21 @@ def get_complete_profiles(name: str) -> list[dict]:
 
     return complete_profiles
 
-def main():
-    try:
-        complete_profiles = get_complete_profiles()
-
-        for profile in complete_profiles:
-            print(profile)
-
-    except:
-        traceback.print_exc()
-        sys.exit(-1)
-
-def test():
-    names, codes = get_facebook_accounts()
-    for name, code in zip(names, codes):
-        print(f"{name} -->> {code}")
-
-if __name__ == "__main__":
-    main()
+# def main():
+#     try:
+#         complete_profiles = get_complete_profiles()
+#
+#         for profile in complete_profiles:
+#             print(profile)
+#
+#     except:
+#         traceback.print_exc()
+#         sys.exit(-1)
+#
+# def test():
+#     names, codes = get_facebook_accounts()
+#     for name, code in zip(names, codes):
+#         print(f"{name} -->> {code}")
+#
+# if __name__ == "__main__":
+#     main()

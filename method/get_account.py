@@ -32,6 +32,38 @@ def get_account_facebook(nama) -> AkunFacebook:
     return result
 
 
+def get_accounts_facebook(nama_list: list[str]) -> list[AkunFacebook]:
+    results = []  # Menggunakan list karena hasil bisa lebih dari satu
+    try:
+        file_path = os.path.join(mydir.database_dir, 'db_facebook.db')
+        with sqlite3.connect(file_path) as connection:
+            cursor = connection.cursor()
+
+            # 1. Buat placeholder '?, ?, ?' sesuai jumlah nama
+            placeholders = ', '.join(['?'] * len(nama_list))
+
+            # 2. Gabungkan ke dalam query
+            query = f'SELECT * FROM akun WHERE nama IN ({placeholders})'
+
+            # 3. Eksekusi dengan list nama sebagai parameter kedua
+            cursor.execute(query, nama_list)
+
+            rows = cursor.fetchall()
+
+            for row in rows:
+                # Memasukkan setiap hasil ke dalam list results
+                akun = AkunFacebook(
+                    row[0], row[1], row[2], row[3], row[4]
+                )
+                results.append(akun)
+
+            cursor.close()
+
+    except sqlite3.Error as e:
+        print(f"Error: {e}")
+
+    return results
+
 def get_facebook_accounts() -> (list[str], list[int]):
     names = []
     codes = []

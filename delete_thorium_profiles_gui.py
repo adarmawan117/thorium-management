@@ -4,7 +4,7 @@ import os
 import json
 import traceback
 
-from PyQt5.QtWidgets import QTextEdit, QLineEdit
+from PyQt5.QtWidgets import QTextEdit, QLineEdit, QPlainTextEdit
 
 import method.directory as mydir
 
@@ -59,18 +59,19 @@ class Ui_Frame(QtCore.QObject):  # Menjadikan Ui_Frame sebagai QObject
 
     def setupUi(self, Frame):
         Frame.setObjectName("Frame")
-        Frame.resize(594, 440)
+        Frame.resize(594, 500)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(os.path.join(mydir.icon_apps_dir, "thorium-merah.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Frame.setWindowIcon(icon)
         Frame.setWindowTitle("Delete Thorium Profiles")
 
+        height = 100
         # region Input File
-        y = 30
-        self.txt_path = QLineEdit(Frame)
-        self.txt_path.setGeometry(QtCore.QRect(20, y, 383, 25))
-        self.txt_path.setPlaceholderText("Masukkan nama profile yang akan dicari, kemudian tekan enter...")
-        self.txt_path.setStyleSheet("""
+        y = 40
+        self.txt_cari_profile = QPlainTextEdit(Frame)
+        self.txt_cari_profile.setGeometry(QtCore.QRect(20, y, 383, height))
+        self.txt_cari_profile.setPlaceholderText("Masukkan nama profile yang akan dicari...")
+        self.txt_cari_profile.setStyleSheet("""
                     QTextEdit {
                         background-color: #f5f5f5;
                         border: 1px solid #b0bec5;
@@ -80,7 +81,6 @@ class Ui_Frame(QtCore.QObject):  # Menjadikan Ui_Frame sebagai QObject
                         border: 1px solid #1e88e5;
                     }
                 """)
-        self.txt_path.returnPressed.connect(self.search_profile)
 
         self.btn_load_profile_file = QtWidgets.QPushButton(Frame)
         self.btn_load_profile_file.setGeometry(QtCore.QRect(408, y, 55, 25))
@@ -101,7 +101,7 @@ class Ui_Frame(QtCore.QObject):  # Menjadikan Ui_Frame sebagai QObject
                                 """)
         self.btn_load_profile_file.clicked.connect(self.search_profile)
 
-        y += 30
+        y += height + 15
         self.tableProfiles = QtWidgets.QTableWidget(Frame)
         self.tableProfiles.setGeometry(QtCore.QRect(20, y, 551, 250))
         self.tableProfiles.setColumnCount(4)
@@ -156,9 +156,9 @@ class Ui_Frame(QtCore.QObject):  # Menjadikan Ui_Frame sebagai QObject
 
         self.resetTable()
 
-    def resetTable(self, name: str = None):
+    def resetTable(self, names: list[str] = None):
         try:
-            complete_profiles = get_complete_profiles(name)
+            complete_profiles = get_complete_profiles(names)
             self.tableProfiles.setRowCount(len(complete_profiles))
 
             no = 0
@@ -174,8 +174,8 @@ class Ui_Frame(QtCore.QObject):  # Menjadikan Ui_Frame sebagai QObject
             sys.exit(-1)
 
     def search_profile(self):
-        name = self.txt_path.text()
-        self.resetTable(name)
+        names = self.txt_cari_profile.toPlainText().strip().split("\n")
+        self.resetTable(names)
 
     def eventFilter(self, obj, event):
         if obj == self.tableProfiles and event.type() == QtCore.QEvent.KeyPress:
